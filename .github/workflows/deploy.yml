@@ -3,7 +3,7 @@ name: Desplegar Código de Lambdas (Laboratorio AWS)
 on:
   push:
     branches:
-      - master # O 'master', según tu rama
+      - master # O 'main', según tu rama
 
 # Define los nombres de los secretos que usaremos
 env:
