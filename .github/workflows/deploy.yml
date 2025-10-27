@@ -19,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # --- ¡ESTA ES TU SOLUCIÓN! ---
+      # --- Configurando credenciales ---
       - name: Configure AWS Credentials (con Token de Sesión)
         uses: aws-actions/configure-aws-credentials@v4 # Usamos v4, la más actual
         with:
@@ -29,14 +29,14 @@ jobs:
           aws-region: us-east-1 # ¡Asegúrate de que esta es tu región del lab!
 
       # --- Pasos de Despliegue (Corregidos con tus nombres de AWS) ---
-      - name: Deploy s3fileevent
+      - name: Deploy s3_file_event
         run: |
           cd s3_file_event
           zip -r ../lambda1.zip .
           cd ..
           aws lambda update-function-code --function-name s3_file_event --zip-file fileb://lambda1.zip
 
-      - name: Deploy getimagemetadata
+      - name: Deploy get_image_metadata
         run: |
           cd get_image_metadata
           zip -r ../lambda2.zip .
