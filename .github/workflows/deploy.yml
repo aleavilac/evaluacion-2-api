@@ -34,14 +34,14 @@ jobs:
           cd s3_file_event
           zip -r ../lambda1.zip .
           cd ..
-          aws lambda update-function-code --function-name s3fileevent --zip-file fileb://lambda1.zip
+          aws lambda update-function-code --function-name s3_file_event --zip-file fileb://lambda1.zip
 
       - name: Deploy getimagemetadata
         run: |
           cd get_image_metadata
           zip -r ../lambda2.zip .
           cd ..
-          aws lambda update-function-code --function-name getimagemetadata --zip-file fileb://lambda2.zip
+          aws lambda update-function-code --function-name get_image_metadata --zip-file fileb://lambda2.zip
 
       - name: Despliegue completado
         run: echo "¡Código de Lambdas actualizado exitosamente!"
