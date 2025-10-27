@@ -1,42 +1,47 @@
-name: Desplegar Código de Lambdas en AWS
+name: Desplegar Código de Lambdas (Laboratorio AWS)
 
 on:
   push:
     branches:
-      - master # O la rama principal que uses
+      - master # O 'master', según tu rama
+
+# Define los nombres de los secretos que usaremos
+env:
+  LAB_AWS_ACCESS_KEY_ID: ${{ secrets.LAB_AWS_ACCESS_KEY_ID }}
+  LAB_AWS_SECRET_ACCESS_KEY: ${{ secrets.LAB_AWS_SECRET_ACCESS_KEY }}
+  LAB_AWS_SESSION_TOKEN: ${{ secrets.LAB_AWS_SESSION_TOKEN }}
 
 jobs:
   deploy-lambda-code:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # 1. Obtener el código del repositorio
       - name: Checkout
         uses: actions/checkout@v3
 
-      # 2. Configurar credenciales de AWS
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      # --- ¡ESTA ES TU SOLUCIÓN! ---
+      - name: Configure AWS Credentials (con Token de Sesión)
+        uses: aws-actions/configure-aws-credentials@v4 # Usamos v4, la más actual
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 # ¡Cambia esto a tu región!
+          aws-access-key-id: ${{ env.LAB_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.LAB_AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ env.LAB_AWS_SESSION_TOKEN }}
+          aws-region: us-east-1 # ¡Asegúrate de que esta es tu región del lab!
 
-      # 3. Preparar y Desplegar Lambda 's3_file_event'
-      - name: Deploy s3_file_event
+      # --- Pasos de Despliegue (Corregidos con tus nombres de AWS) ---
+      - name: Deploy s3fileevent
         run: |
           cd s3_file_event
           zip -r ../lambda1.zip .
           cd ..
-          aws lambda update-function-code --function-name s3_file_event --zip-file fileb://lambda1.zip
+          aws lambda update-function-code --function-name s3fileevent --zip-file fileb://lambda1.zip
 
-      # 4. Preparar y Desplegar Lambda 'get_image_metadata'
-      - name: Deploy get_image_metadata
+      - name: Deploy getimagemetadata
         run: |
           cd get_image_metadata
           zip -r ../lambda2.zip .
           cd ..
-          aws lambda update-function-code --function-name get_image_metadata --zip-file fileb://lambda2.zip
+          aws lambda update-function-code --function-name getimagemetadata --zip-file fileb://lambda2.zip
 
       - name: Despliegue completado
         run: echo "¡Código de Lambdas actualizado exitosamente!"
