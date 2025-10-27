@@ -16,7 +16,11 @@ table = dynamodb.Table(TABLE_NAME)
 
 def lambda_handler(event, context):
     try:
-        http_method = event['httpMethod']
+        # --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+        # En HTTP API, el método está en esta ruta
+        http_method = event['requestContext']['http']['method']
+        # -------------------------------------
+        
         path_parameters = event.get('pathParameters')
 
         # CASO 1: GET /metadata (Listar todo)
@@ -52,6 +56,8 @@ def lambda_handler(event, context):
                 return {'statusCode': 200, 'body': json.dumps('Item eliminado')}
 
         return {'statusCode': 400, 'body': json.dumps('Ruta o método no válido')}
+    
     except Exception as e:
         print(f"Error: {e}")
-        return {'statusCode': 500, 'body': json.dumps(f'Error en el servidor: {e}')}
+        # Este es el error que estás viendo:
+        return {'statusCode': 500, 'body': json.dumps(f'Error en el servidor: {str(e)}')}
