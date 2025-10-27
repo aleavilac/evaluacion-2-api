@@ -3,7 +3,7 @@ name: Desplegar Código de Lambdas en AWS
 on:
   push:
     branches:
-      - main # O la rama principal que uses
+      - master # O la rama principal que uses
 
 jobs:
   deploy-lambda-code:
