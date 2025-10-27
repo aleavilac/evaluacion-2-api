@@ -1,0 +1,42 @@
+name: Desplegar Código de Lambdas en AWS
+
+on:
+  push:
+    branches:
+      - main # O la rama principal que uses
+
+jobs:
+  deploy-lambda-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Obtener el código del repositorio
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # 2. Configurar credenciales de AWS
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 # ¡Cambia esto a tu región!
+
+      # 3. Preparar y Desplegar Lambda 's3_file_event'
+      - name: Deploy s3_file_event
+        run: |
+          cd s3_file_event
+          zip -r ../lambda1.zip .
+          cd ..
+          aws lambda update-function-code --function-name s3_file_event --zip-file fileb://lambda1.zip
+
+      # 4. Preparar y Desplegar Lambda 'get_image_metadata'
+      - name: Deploy get_image_metadata
+        run: |
+          cd get_image_metadata
+          zip -r ../lambda2.zip .
+          cd ..
+          aws lambda update-function-code --function-name get_image_metadata --zip-file fileb://lambda2.zip
+
+      - name: Despliegue completado
+        run: echo "¡Código de Lambdas actualizado exitosamente!"
